@@ -1,0 +1,81 @@
+version: '3'
+services:
+  php-fpm:
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    build: ./docker/php
+    environment:
+      - "PSQL_PORT=5432"
+      - "PSQL_HOST=postgres"
+      - "RABBITMQ_PORT=5672"
+      - "RABBITMQ_HOST=docker-rabbitmq"
+    volumes:
+      - ./:/var/www
+      - composer:/root/.composer/cache
+      - ~/.composer/auth.json:/root/.composer/auth.json
+    depends_on:
+      - postgres
+      - rabbitmq
+
+#    networks:
+#      - cpa
+#      - local
+
+  nginx:
+    image: nginx:latest
+    restart: always
+    volumes:
+      - ./:/var/www
+      - ./docker/nginx/config:/etc/nginx/conf.d
+      - ./docker/nginx/logs:/var/log/nginx
+    depends_on:
+      - php-fpm
+    ports:
+      - "8080:80"
+      - "443:443"
+#    networks:
+#      cpa:
+#        ipv4_address: 172.40.5.2
+#      local:
+
+  postgres:
+    image: postgres:11.2-alpine
+    volumes:
+      - ./docker/postgres/create_extension.sql:/docker-entrypoint-initdb.d/create_extension.sql
+      - postgres:/var/lib/postgresql/data
+    ports:
+      - "54321:5432"
+    environment:
+      - "POSTGRES_DB=limonad"
+      - "POSTGRES_USER=root"
+      - "POSTGRES_PASSWORD=root"
+#    networks:
+#      - local
+
+  rabbitmq:
+    image: bitnami/rabbitmq:latest
+    hostname: docker-rabbitmq
+    volumes:
+      - ./docker/rabbitmq/enabled_plugins:/etc/rabbitmq/enabled_plugins
+      - rabbitmq-api:/var/lib/rabbitmq
+    environment:
+      - "RABBITMQ_USERNAME=rabbit"
+      - "RABBITMQ_PASSWORD=rabbit"
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+#    networks:
+#      local:
+#      cpa:
+#        ipv4_address: 172.40.5.9
+
+volumes:
+  postgres:
+  composer:
+  rabbitmq-api:
+
+#networks:
+#  cpa:
+#    external: true
+#  local:
+#    external: false
