@@ -1,5 +1,13 @@
 FROM php:8.1-fpm
 
+ARG USERNAME=developer
+ARG USER_UID=1000
+ARG USER_GID=$USER_UID
+
+# Create the user
+RUN groupadd --gid $USER_GID $USERNAME \
+    && useradd --uid $USER_UID --gid $USER_GID -m $USERNAME
+
 RUN apt-get update -q -y \
     && apt-get install -q -y --no-install-recommends \
     libmemcached-dev zlib1g-dev \
@@ -37,5 +45,7 @@ ADD php-fpm.ini /usr/local/etc/php/php.ini
 
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 RUN pear install PHP_CodeSniffer
+
+USER developer
 
 WORKDIR /var/www
