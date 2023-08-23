@@ -37,7 +37,7 @@ RUN docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql \
     && docker-php-ext-install pgsql pdo_pgsql \
     && docker-php-ext-install bcmath \
     && docker-php-ext-install zip \
-    && pecl install xdebug \
+    && pecl install xdebug-3.2.2 \
     && docker-php-ext-enable xdebug \
     && docker-php-ext-install sockets
 
