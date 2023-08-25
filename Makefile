@@ -14,7 +14,7 @@ env:
 	docker-compose exec php-fpm cp -n .env.local.example .env.local
 	docker-compose exec php-fpm cp -n .env.local.example .env.test.local
 
-php-in:
+php-cli:
 	docker-compose exec php-fpm bash
 
 composer-install:
