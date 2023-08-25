@@ -8,12 +8,13 @@ services:
       - "PSQL_PORT=5432"
       - "PSQL_HOST=postgres"
     volumes:
-      - ./:/var/www
+      - ./advanced/:/var/www
       - composer:/root/.composer/cache
       - ~/.composer/auth.json:/root/.composer/auth.json
     depends_on:
       - postgres
       - rabbitmq
+      - redis
 
   nginx:
     image: nginx:latest
@@ -39,6 +40,12 @@ services:
       - "POSTGRES_USER=root"
       - "POSTGRES_PASSWORD=root"
 
+  redis:
+    image: redis:7-alpine
+    volumes:
+      - redis_db:/data
+    ports:
+      - "6379:6379"
   rabbitmq:
     image: bitnami/rabbitmq:latest
     hostname: docker-rabbitmq
@@ -54,5 +61,6 @@ services:
 
 volumes:
   postgres_db:
+  redis_db:
   composer:
   rabbitmq-api:

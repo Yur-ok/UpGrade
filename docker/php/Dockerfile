@@ -22,8 +22,11 @@ RUN apt-get update -q -y \
     supervisor \
     procps \
     sudo \
+    redis-server \
     && pecl install memcached \
     && pecl install ds \
+    && pecl install redis \
+    && docker-php-ext-enable redis \
     && docker-php-ext-enable memcached \
     && rm -rf /var/lib/apt/lists/*
 
