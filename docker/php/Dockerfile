@@ -49,6 +49,6 @@ ADD php-fpm.ini /usr/local/etc/php/php.ini
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 RUN pear install PHP_CodeSniffer
 
-USER developer
+USER $USERNAME
 
 WORKDIR /var/www

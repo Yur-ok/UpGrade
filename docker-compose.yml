@@ -8,9 +8,8 @@ services:
       - "PSQL_PORT=5432"
       - "PSQL_HOST=postgres"
     volumes:
-      - ./advanced/:/var/www
+      - ./advanced:/var/www
       - composer:/root/.composer/cache
-      - ~/.composer/auth.json:/root/.composer/auth.json
     depends_on:
       - postgres
       - rabbitmq
@@ -20,13 +19,13 @@ services:
     image: nginx:latest
     restart: always
     volumes:
-      - ./:/var/www
+      - ./advanced:/var/www
       - ./docker/nginx/config:/etc/nginx/conf.d
       - ./docker/nginx/logs:/var/log/nginx
     depends_on:
       - php-fpm
     ports:
-      - "8080:80"
+      - "80:80"
       - "443:443"
 
   postgres:
