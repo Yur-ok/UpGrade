@@ -4,7 +4,7 @@ return [
     'components' => [
         'db' => [
             'class' => \yii\db\Connection::class,
-            'dsn' => 'psql:host=postgres;dbname=upgrade',
+            'dsn' => 'pgsql:host=postgres;dbname=upgrade',
             'username' => 'root',
             'password' => 'root',
             'charset' => 'utf8',
