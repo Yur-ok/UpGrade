@@ -1,10 +1,17 @@
 {
     "name": "yurok/upgrade",
-    "description": "Upgrage inside Sklv",
+    "description": "Upgrade inside Sklv",
     "keywords": ["yii2", "framework", "advanced", "upgrade"],
-    "homepage": "https://upgrade.dev",
+    "homepage": "https://upgrade.yb",
     "type": "project",
     "license": "BSD-3-Clause",
+  "support": {
+    "issues": "https://github.com/yiisoft/yii2/issues?state=open",
+    "forum": "http://www.yiiframework.com/forum/",
+    "wiki": "http://www.yiiframework.com/wiki/",
+    "irc": "irc://irc.freenode.net/yii",
+    "source": "https://github.com/yiisoft/yii2"
+  },
     "minimum-stability": "stable",
     "require": {
         "php": ">=8.1.0",
