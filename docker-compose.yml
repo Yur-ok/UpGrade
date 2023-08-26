@@ -8,7 +8,7 @@ services:
       - "PSQL_PORT=5432"
       - "PSQL_HOST=postgres"
     volumes:
-      - ./advanced:/var/www
+      - ./src:/var/www
       - composer:/root/.composer/cache
     depends_on:
       - postgres
@@ -19,7 +19,7 @@ services:
     image: nginx:latest
     restart: always
     volumes:
-      - ./advanced:/var/www
+      - ./src:/var/www
       - ./docker/nginx/config:/etc/nginx/conf.d
       - ./docker/nginx/logs:/var/log/nginx
     depends_on:
