@@ -2,10 +2,11 @@
 
 use app\models\Country;
 use yii\helpers\Html;
+
 /** @var $country Country */
 
 ?>
-<p>Вы ввели следующую информацию:</p>
+<p><?= Yii::t('app', 'Вы ввели следующую информацию:') ?></p>
 
 <ul>
     <li><label>Code</label>: <?= Html::encode($country->code) ?></li>
@@ -13,4 +14,4 @@ use yii\helpers\Html;
     <li><label>Population</label>: <?= Html::encode($country->population) ?></li>
 </ul>
 
-<a class="btn btn-warning" href="/crud/create/">Добавить ещё</a>
+<a class="btn btn-warning" href="/crud/create/"><?= Yii::t('app', 'Добавить ещё') ?></a>
