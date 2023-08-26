@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use app\models\Country;
+use Yii;
 use yii\data\Pagination;
 use yii\web\Controller;
 
@@ -33,6 +34,19 @@ class CrudController extends Controller
     {
         $country = Country::findOne(['id' => $id]);
 
-        return $this->render('show', ['country' => $country]);
+        return $this->render('show', compact('country'));
+    }
+
+    public function actionCreate(): string
+    {
+        $country = new Country();
+        if ($country->load(Yii::$app->request->post()) && $country->validate()) {
+            $country->save();
+            return $this->render('create-done', compact('country'));
+        }
+
+        $errors = $country->errors;
+
+        return $this->render('create', compact('country', 'errors'));
     }
 }

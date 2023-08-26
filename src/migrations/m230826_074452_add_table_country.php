@@ -17,7 +17,7 @@ class m230826_074452_add_table_country extends Migration
         $this->tableName = 'country';
         $this->createTable($this->tableName, [
                 'id' => $this->primaryKey(),
-                'code' => $this->string(2)->notNull()->unique(),
+                'code' => $this->string(2)->notNull(),
                 'name' => $this->string(52)->notNull(),
                 'population' => $this->integer(11)->notNull()->defaultValue('0')
             ]
