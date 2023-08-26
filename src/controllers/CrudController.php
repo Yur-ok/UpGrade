@@ -8,6 +8,7 @@ use yii\data\Pagination;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\web\Controller;
+use yii\web\Response;
 
 class CrudController extends Controller
 {
@@ -90,6 +91,12 @@ class CrudController extends Controller
         }
 
         return $this->render('update', compact('country'));
+    }
+
+    public function actionDelete(int $id): Response
+    {
+        Country::deleteAll(['id' => $id]);
+        return $this->redirect('index');
     }
 
 }
