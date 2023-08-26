@@ -1,6 +1,9 @@
 <?php
 use yii\helpers\Html;
 use yii\widgets\LinkPager;
+
+/** @var $countries */
+/** @var $pagination */
 ?>
     <h1>Countries</h1>
     <ul>

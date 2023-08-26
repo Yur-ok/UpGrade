@@ -28,4 +28,11 @@ class CrudController extends Controller
             'pagination' => $pagination,
         ]);
     }
+
+    public function actionShow($id): string
+    {
+        $country = Country::findOne(['id' => $id]);
+
+        return $this->render('show', ['country' => $country]);
+    }
 }
