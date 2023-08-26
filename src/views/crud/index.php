@@ -9,6 +9,7 @@ use yii\widgets\LinkPager;
     <ul>
         <?php foreach ($countries as $country): ?>
             <li>
+                <a href="/crud/update?id=<?= $country->id ?>">#edit</a>
                 <?= Html::encode("{$country->code} ({$country->name})") ?>:
                 <?= $country->population ?>
             </li>

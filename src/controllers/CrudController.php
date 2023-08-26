@@ -5,6 +5,8 @@ namespace app\controllers;
 use app\models\Country;
 use Yii;
 use yii\data\Pagination;
+use yii\filters\AccessControl;
+use yii\filters\VerbFilter;
 use yii\web\Controller;
 
 class CrudController extends Controller
@@ -15,7 +17,7 @@ class CrudController extends Controller
         $query = Country::find();
 
         $pagination = new Pagination([
-            'defaultPageSize' => 5,
+            'defaultPageSize' => 35,
             'totalCount' => $query->count(),
         ]);
 
@@ -49,4 +51,18 @@ class CrudController extends Controller
 
         return $this->render('create', compact('country', 'errors'));
     }
+
+    public function actionUpdate(int $id): string
+    {
+        $country = Country::find()->where(['id' => $id])->one();
+
+        if (Yii::$app->request->isPost) {
+            $country->load(Yii::$app->request->post());
+            $country->save();
+            $this->redirect('index');
+        }
+
+        return $this->render('update', compact('country'));
+    }
+
 }
