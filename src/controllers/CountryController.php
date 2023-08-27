@@ -4,13 +4,28 @@ namespace app\controllers;
 
 use app\models\Country;
 use Yii;
+use yii\caching\DbDependency;
 use yii\filters\AccessControl;
+use yii\filters\ContentNegotiator;
+use yii\filters\PageCache;
 use yii\filters\VerbFilter;
-use yii\web\Controller;
+use yii\rest\ActiveController;
 use yii\web\Response;
 
-class CountryController extends Controller
+class CountryController extends ActiveController
 {
+    public $modelClass = Country::class;
+
+    public array $cors = [
+        'Origin' => [
+            '*',
+        ],
+        'Access-Control-Request-Method' => [
+            'GET',
+            'POST',
+        ],
+    ];
+
 
     public function behaviors(): array
     {
@@ -19,71 +34,50 @@ class CountryController extends Controller
                 'class' => AccessControl::class,
                 'rules' => [
                     [
-                        'actions' => ['index'],
+                        'actions' => ['index', 'view'],
                         'allow' => true,
                     ],
                     [
-                        'actions' => ['create', 'show', 'update', 'delete'],
+                        'actions' => ['create', 'update', 'delete'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
                 ],
             ],
+            [
+                'class' => ContentNegotiator::class,
+                'formats' => [
+                    'application/json' => Response::FORMAT_JSON,
+                    'application/xml' => Response::FORMAT_XML,
+                ],
+                'languages' => [
+                    'ru-RU',
+                    'en-US',
+                ],
+            ],
+            'pageCache' => [
+                'class' => PageCache::class,
+                'only' => ['index'],
+                'dependency' => [
+                    'class' => DbDependency::class,
+                    'sql' => 'SELECT COUNT(*) FROM country',
+                ],
+                'variations' => [
+                    Yii::$app->language,
+                ]
+            ],
             'verbs' => [
                 'class' => VerbFilter::class,
                 'actions' => [
-                    'logout' => ['post', 'get'],
+                    'index'  => ['get'],
+                    'view'   => ['get'],
+                    'create' => ['get', 'post'],
+                    'update' => ['get', 'post'],
+                    'delete' => ['post'],
                 ],
             ],
         ];
     }
 
-
-    public function actionIndex(): string
-    {
-        $query = Country::find();
-        $countries = $query->orderBy('name')->all();
-
-        return $this->render('index', compact('countries'));
-    }
-
-    public function actionShow($id): string
-    {
-        $country = Country::findOne(['id' => $id]);
-
-        return $this->render('show', compact('country'));
-    }
-
-    public function actionCreate(): string
-    {
-        $country = new Country();
-        if ($country->load(Yii::$app->request->post()) && $country->validate()) {
-            $country->save();
-            return $this->render('create-done', compact('country'));
-        }
-
-        $errors = $country->errors;
-
-        return $this->render('create', compact('country', 'errors'));
-    }
-
-    public function actionUpdate(int $id): string
-    {
-        $country = Country::find()->where(['id' => $id])->one();
-
-        if (Yii::$app->request->isPost) {
-            $country->load(Yii::$app->request->post());
-            $country->save();
-            $this->redirect('index');
-        }
-
-        return $this->render('update', compact('country'));
-    }
-
-    public function actionDelete(int $id): Response
-    {
-        Country::deleteAll(['id' => $id]);
-        return $this->redirect('index');
-    }
 
 }

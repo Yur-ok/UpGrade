@@ -1,10 +1,13 @@
 <?php
 
-use yii\debug\Module;
-use yii\log\FileTarget;
+use yii\redis\Cache;
+use yii\redis\Connection;
 use app\models\User;
-use yii\caching\FileCache;
+use yii\debug\Module;
 use yii\i18n\PhpMessageSource;
+use yii\log\FileTarget;
+use yii\rest\UrlRule;
+use yii\web\JsonParser;
 
 $params = require __DIR__ . '/params.php';
 $db = require __DIR__ . '/db.php';
@@ -14,7 +17,12 @@ $config = [
     'basePath' => dirname(__DIR__),
 //    'language' => 'ru-RU',
     'language' => 'en-US',
-    'bootstrap' => ['log'],
+    'bootstrap' => ['debug'],
+    'modules' => [
+        'debug' => [
+            'class' => Module::class,
+        ],
+    ],
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
         '@npm' => '@vendor/npm-asset',
@@ -23,6 +31,9 @@ $config = [
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
             'cookieValidationKey' => 'ImRj6tLYu_G-HqAYirtQPpavFAiLv45f',
+            'parsers' => [
+                'application/json' => JsonParser::class,
+            ],
         ],
         'i18n' => [
             'translations' => [
@@ -37,8 +48,15 @@ $config = [
                 ],
             ],
         ],
+        'redis' => [
+            'class' => Connection::class,
+            'hostname' => 'redis',
+            'port' => 6379,
+            'database' => 0,
+        ],
         'cache' => [
-            'class' => FileCache::class,
+            'class' => Cache::class,
+            'defaultDuration' => 86400,
         ],
         'user' => [
             'identityClass' => User::class,
@@ -66,8 +84,10 @@ $config = [
 
         'urlManager' => [
             'enablePrettyUrl' => true,
+            'enableStrictParsing' => true,
             'showScriptName' => false,
             'rules' => [
+                ['class' => UrlRule::class, 'controller' => 'country']
             ],
         ],
 
