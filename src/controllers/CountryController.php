@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\components\ActionTimeFilter;
 use app\models\Country;
 use Yii;
 use yii\caching\DbDependency;
@@ -69,13 +70,16 @@ class CountryController extends ActiveController
             'verbs' => [
                 'class' => VerbFilter::class,
                 'actions' => [
-                    'index'  => ['get'],
-                    'view'   => ['get'],
+                    'index' => ['get'],
+                    'view' => ['get'],
                     'create' => ['get', 'post'],
                     'update' => ['get', 'post'],
                     'delete' => ['post'],
                 ],
             ],
+            'actionTime' => [
+                'class' => ActionTimeFilter::class,
+            ]
         ];
     }
 

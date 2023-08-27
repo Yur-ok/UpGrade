@@ -78,9 +78,8 @@ $config = [
             'targets' => [
                 'default' => [
                     'class' => FileTarget::class,
-                    'maxFileSize' => 10240,
                     'maxLogFiles' => 3,
-                    'levels' => ['error', 'warning'],
+                    'levels' => ['error', 'warning', 'info'],
                     'logFile' => __DIR__ . '/../logs/errorLog',
                     'logVars' => [],
                     'except' => [
@@ -92,6 +91,7 @@ $config = [
                 ],
                 '400' => [
                     'class' => FileTarget::class,
+                    'maxLogFiles' => 1,
                     'levels' => ['error'],
                     'logFile' => __DIR__ . '/../logs/400',
                     'logVars' => [],
@@ -99,6 +99,7 @@ $config = [
                 ],
                 '403' => [
                     'class' => FileTarget::class,
+                    'maxLogFiles' => 1,
                     'levels' => ['error'],
                     'logFile' => __DIR__ . '/../logs/403',
                     'logVars' => [],
@@ -106,6 +107,7 @@ $config = [
                 ],
                 '404' => [
                     'class' => FileTarget::class,
+                    'maxLogFiles' => 1,
                     'levels' => ['error'],
                     'logFile' => __DIR__ . '/../logs/404',
                     'logVars' => [],
@@ -113,17 +115,18 @@ $config = [
                 ],
                 '500' => [
                     'class' => FileTarget::class,
+                    'maxLogFiles' => 1,
                     'levels' => ['error'],
                     'logFile' => __DIR__ . '/../logs/500',
                     'logVars' => [],
                     'categories' => ['yii\web\HttpException:500'],
                 ],
-                'profile' => [
+                'actionTime' => [
                     'class' => FileTarget::class,
-                    'levels' => ['profile'],
-                    'logFile' => __DIR__ . '/../logs/profile',
+                    'levels' => ['trace'],
+                    'logFile' => __DIR__ . '/../logs/actionTime',
                     'logVars' => [],
-                    'categories' => ['CountryController']
+                    'categories' => ['ActionTime']
                 ]
             ],
         ],
