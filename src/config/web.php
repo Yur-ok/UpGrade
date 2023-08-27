@@ -1,11 +1,12 @@
 <?php
 
-use yii\redis\Cache;
-use yii\redis\Connection;
+use app\controllers\CountryController;
 use app\models\User;
 use yii\debug\Module;
 use yii\i18n\PhpMessageSource;
 use yii\log\FileTarget;
+use yii\redis\Cache;
+use yii\redis\Connection;
 use yii\rest\UrlRule;
 use yii\web\JsonParser;
 
@@ -15,9 +16,9 @@ $db = require __DIR__ . '/db.php';
 $config = [
     'id' => 'basic',
     'basePath' => dirname(__DIR__),
-//    'language' => 'ru-RU',
+    //    'language' => 'ru-RU',
     'language' => 'en-US',
-    'bootstrap' => ['debug'],
+    'bootstrap' => ['log', 'debug'],
     'modules' => [
         'debug' => [
             'class' => Module::class,
@@ -41,7 +42,7 @@ $config = [
                     'class' => PhpMessageSource::class,
                     'basePath' => '@app/translations',
                     'sourceLanguage' => 'ru-RU',
-//                    'sourceLanguage' => 'en-US',
+                    //                    'sourceLanguage' => 'en-US',
                     'fileMap' => [
                         'app' => 'app.php',
                     ],
@@ -72,16 +73,61 @@ $config = [
             'useFileTransport' => true,
         ],
         'log' => [
-            'traceLevel' => YII_DEBUG ? 3 : 0,
+            'traceLevel' => YII_DEBUG ? 5 : 0,
+            'flushInterval' => 100,
             'targets' => [
-                [
+                'default' => [
                     'class' => FileTarget::class,
+                    'maxFileSize' => 10240,
+                    'maxLogFiles' => 3,
                     'levels' => ['error', 'warning'],
+                    'logFile' => __DIR__ . '/../logs/errorLog',
+                    'logVars' => [],
+                    'except' => [
+                        'yii\web\HttpException:400',
+                        'yii\web\HttpException:403',
+                        'yii\web\HttpException:404',
+                        'yii\web\HttpException:500',
+                    ],
                 ],
+                '400' => [
+                    'class' => FileTarget::class,
+                    'levels' => ['error'],
+                    'logFile' => __DIR__ . '/../logs/400',
+                    'logVars' => [],
+                    'categories' => ['yii\web\HttpException:400'],
+                ],
+                '403' => [
+                    'class' => FileTarget::class,
+                    'levels' => ['error'],
+                    'logFile' => __DIR__ . '/../logs/403',
+                    'logVars' => [],
+                    'categories' => ['yii\web\HttpException:403'],
+                ],
+                '404' => [
+                    'class' => FileTarget::class,
+                    'levels' => ['error'],
+                    'logFile' => __DIR__ . '/../logs/404',
+                    'logVars' => [],
+                    'categories' => ['yii\web\HttpException:404'],
+                ],
+                '500' => [
+                    'class' => FileTarget::class,
+                    'levels' => ['error'],
+                    'logFile' => __DIR__ . '/../logs/500',
+                    'logVars' => [],
+                    'categories' => ['yii\web\HttpException:500'],
+                ],
+                'profile' => [
+                    'class' => FileTarget::class,
+                    'levels' => ['profile'],
+                    'logFile' => __DIR__ . '/../logs/profile',
+                    'logVars' => [],
+                    'categories' => ['CountryController']
+                ]
             ],
         ],
         'db' => $db,
-
         'urlManager' => [
             'enablePrettyUrl' => true,
             'enableStrictParsing' => true,
