@@ -14,4 +14,4 @@ use yii\helpers\Html;
     <li><label>Population</label>: <?= Html::encode($country->population) ?></li>
 </ul>
 
-<a class="btn btn-warning" href="/crud/create/"><?= Yii::t('app', 'Добавить ещё') ?></a>
+<a class="btn btn-warning" href="/country/create/"><?= Yii::t('app', 'Добавить ещё') ?></a>

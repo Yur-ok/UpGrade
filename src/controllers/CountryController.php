@@ -4,13 +4,12 @@ namespace app\controllers;
 
 use app\models\Country;
 use Yii;
-use yii\data\Pagination;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\web\Controller;
 use yii\web\Response;
 
-class CrudController extends Controller
+class CountryController extends Controller
 {
 
     public function behaviors(): array
@@ -43,21 +42,9 @@ class CrudController extends Controller
     public function actionIndex(): string
     {
         $query = Country::find();
+        $countries = $query->orderBy('name')->all();
 
-        $pagination = new Pagination([
-            'defaultPageSize' => 35,
-            'totalCount' => $query->count(),
-        ]);
-
-        $countries = $query->orderBy('name')
-            ->offset($pagination->offset)
-            ->limit($pagination->limit)
-            ->all();
-
-        return $this->render('index', [
-            'countries' => $countries,
-            'pagination' => $pagination,
-        ]);
+        return $this->render('index', compact('countries'));
     }
 
     public function actionShow($id): string
