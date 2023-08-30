@@ -3,7 +3,7 @@
 # suite for unit (internal) tests.
 # RUN `build` COMMAND AFTER ADDING/REMOVING MODULES.
 
-actor: UnitTester
+class_name: UnitTester
 modules:
     enabled:
       - Asserts

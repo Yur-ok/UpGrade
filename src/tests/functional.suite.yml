@@ -6,9 +6,8 @@
 
 # RUN `build` COMMAND AFTER ADDING/REMOVING MODULES.
 #basic/web/index.php
-actor: FunctionalTester
+class_name: FunctionalTester
 modules:
     enabled:
       - Filesystem
       - Yii2
-      - Asserts

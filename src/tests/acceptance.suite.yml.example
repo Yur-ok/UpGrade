@@ -1,4 +1,4 @@
-actor: AcceptanceTester
+class_name: AcceptanceTester
 modules:
     enabled:
         - WebDriver:
