@@ -1,8 +1,11 @@
-SELECT *, (SELECT contact_name || ' ' || customer_name FROM customers WHERE customers.customer_id = 1) AS fullName
-FROM orders
-WHERE customer_id = 1;
+SELECT *,
+       (SELECT contact_name || ' ' || customer_name
+        FROM customers
+        WHERE orders.customer_id = customers.customer_id) AS fullName
+FROM orders;
 
 
-SELECT *
-FROM orders, customers
-WHERE orders.customer_id = 1;
+SELECT orders.*, cust.fullName
+FROM orders,
+     (SELECT (contact_name || ' ' || customer_name) AS fullName, customer_id FROM customers) AS cust
+WHERE orders.customer_id = cust.customer_id;
