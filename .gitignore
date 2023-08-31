@@ -44,3 +44,5 @@
 
 /.env.local
 /.env.*.local/vendor/
+
+/src/vendor
