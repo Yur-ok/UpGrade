@@ -2,7 +2,9 @@
 
 namespace app\controllers;
 
-class Magic{}
+class Magic
+{
+}
 
 
 class User
@@ -10,6 +12,15 @@ class User
     protected $id;
     protected $name;
     protected $country;
+
+    public function __call($name, $arguments)
+    {
+        if (!property_exists($this, $name)) {
+            throw new \BadMethodCallException();
+        }
+
+        return $this->$name->getName() . PHP_EOL;
+    }
 
     public function __isset($property)
     {
@@ -23,7 +34,7 @@ class User
 
     public function __get($property)
     {
-            return $this->$property;
+        return $this->$property;
     }
 }
 
@@ -44,4 +55,4 @@ class Country
 
 $u = new User();
 $u->country = new Country('Russia');
-echo $u->country->getName() . PHP_EOL;
+echo $u->country();
