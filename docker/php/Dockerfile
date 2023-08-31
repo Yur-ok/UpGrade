@@ -1,4 +1,4 @@
-FROM php:8.1-fpm
+FROM php:7.4-fpm
 
 ARG USERNAME=developer
 ARG USER_UID=1000
@@ -22,12 +22,12 @@ RUN apt-get update -q -y \
     supervisor \
     procps \
     sudo \
-    redis-server \
-    && pecl install memcached \
-    && pecl install ds \
-    && pecl install redis \
-    && docker-php-ext-enable redis \
-    && docker-php-ext-enable memcached \
+#    redis-server \
+#    && pecl install memcached \
+#    && pecl install ds \
+#    && pecl install redis \
+#    && docker-php-ext-enable redis \
+#    && docker-php-ext-enable memcached \
     && rm -rf /var/lib/apt/lists/*
 
 RUN apt-get update -q -y \
@@ -40,8 +40,8 @@ RUN docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql \
     && docker-php-ext-install pgsql pdo_pgsql \
     && docker-php-ext-install bcmath \
     && docker-php-ext-install zip \
-    && pecl install xdebug-3.2.2 \
-    && docker-php-ext-enable xdebug \
+#    && pecl install xdebug-3.1 \
+#    && docker-php-ext-enable xdebug \
     && docker-php-ext-install sockets
 
 ADD php-fpm.ini /usr/local/etc/php/php.ini
