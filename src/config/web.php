@@ -1,5 +1,8 @@
 <?php
 
+use yii\rest\UrlRule;
+use yii\web\JsonParser;
+
 $params = require __DIR__ . '/params.php';
 $db = require __DIR__ . '/db.php';
 
@@ -9,12 +12,16 @@ $config = [
     'bootstrap' => ['log'],
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
-        '@npm'   => '@vendor/npm-asset',
+        '@npm' => '@vendor/npm-asset',
     ],
     'components' => [
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
-            'cookieValidationKey' => 'ImRj6tLYu_G-HqAYirtQPpavFAiLv45f',
+            //            'cookieValidationKey' => 'XvzF4PfPUdl1kW7GGtrTwH9KkQlu6gWv',
+            'enableCookieValidation' => false,
+            'parsers' => [
+                'application/json' => JsonParser::class,
+            ],
         ],
         'cache' => [
             'class' => 'yii\caching\FileCache',
@@ -42,14 +49,29 @@ $config = [
             ],
         ],
         'db' => $db,
-
+        /*
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
             ],
         ],
-
+        */
+        'urlManager' => [
+            'enablePrettyUrl' => true,
+            'enableStrictParsing' => true,
+            'showScriptName' => false,
+            'rules' => [
+                ['class' => UrlRule::class, 'controller' => 'country'],
+                ['class' => UrlRule::class, 'controller' => 'rest']
+            ],
+        ],
+        'jwt' => [
+            'class' => \sizeg\jwt\Jwt::class,
+            'key' => 'wertgbNJKJHGFE#$%^&*()POKJHBNMk#$%ERTDFGCVGH453ertfg987t6rdcv@#$WERTDFG',
+            // You have to configure ValidationData informing all claims you want to validate the token.
+            'jwtValidationData' => \app\components\JwtValidationData::class,
+        ],
     ],
     'params' => $params,
 ];

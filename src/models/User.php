@@ -2,6 +2,8 @@
 
 namespace app\models;
 
+use Lcobucci\JWT\Token;
+
 class User extends \yii\base\BaseObject implements \yii\web\IdentityInterface
 {
     public $id;
@@ -36,19 +38,35 @@ class User extends \yii\base\BaseObject implements \yii\web\IdentityInterface
         return isset(self::$users[$id]) ? new static(self::$users[$id]) : null;
     }
 
+//    /**
+//     * {@inheritdoc}
+//     */
+//    public static function findIdentityByAccessToken($token, $type = null)
+//    {
+//        foreach (self::$users as $user) {
+//            if ($user['accessToken'] === $token) {
+//                return new static($user);
+//            }
+//        }
+//
+//        return null;
+//    }
+
     /**
      * {@inheritdoc}
+     * @param Token $token
      */
     public static function findIdentityByAccessToken($token, $type = null)
     {
         foreach (self::$users as $user) {
-            if ($user['accessToken'] === $token) {
+            if ($user['id'] === (string) $token->getClaim('uid')) {
                 return new static($user);
             }
         }
 
         return null;
     }
+
 
     /**
      * Finds user by username
