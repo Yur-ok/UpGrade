@@ -427,12 +427,13 @@
 2023/08/27 09:11:45 [notice] 1#1: start worker process 20
 2023/08/27 09:11:45 [notice] 1#1: start worker process 21
 2023/08/27 09:11:45 [notice] 1#1: start worker process 22
-2023/08/30 14:10:37 [notice] 1#1: using the "epoll" event method
-2023/08/30 14:10:37 [notice] 1#1: nginx/1.25.2
-2023/08/30 14:10:37 [notice] 1#1: built by gcc 12.2.0 (Debian 12.2.0-14) 
-2023/08/30 14:10:37 [notice] 1#1: OS: Linux 6.4.8-orbstack-00059-g106c60a3471f
-2023/08/30 14:10:37 [notice] 1#1: getrlimit(RLIMIT_NOFILE): 20480:1048576
-2023/08/30 14:10:37 [notice] 1#1: start worker processes
-2023/08/30 14:10:37 [notice] 1#1: start worker process 20
-2023/08/30 14:10:37 [notice] 1#1: start worker process 21
-2023/08/30 14:10:37 [notice] 1#1: start worker process 22
+2023/08/28 16:20:41 [notice] 1#1: using the "epoll" event method
+2023/08/28 16:20:41 [notice] 1#1: nginx/1.25.2
+2023/08/28 16:20:41 [notice] 1#1: built by gcc 12.2.0 (Debian 12.2.0-14) 
+2023/08/28 16:20:41 [notice] 1#1: OS: Linux 6.4.8-orbstack-00059-g106c60a3471f
+2023/08/28 16:20:41 [notice] 1#1: getrlimit(RLIMIT_NOFILE): 20480:1048576
+2023/08/28 16:20:41 [notice] 1#1: start worker processes
+2023/08/28 16:20:41 [notice] 1#1: start worker process 20
+2023/08/28 16:20:41 [notice] 1#1: start worker process 21
+2023/08/28 16:20:41 [notice] 1#1: start worker process 22
+
