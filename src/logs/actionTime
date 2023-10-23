@@ -1,0 +1,12 @@
+2023-08-27 15:35:12 [192.168.172.1][-][-][trace][Time] Action 'country/view' spent 0.18948793411255 second.
+    in /var/www/components/ActionTimeFilter.php:21
+2023-08-27 15:35:18 [192.168.172.1][-][-][trace][Time] Action 'country/index' spent 0.080438852310181 second.
+    in /var/www/components/ActionTimeFilter.php:21
+2023-08-27 15:38:56 [192.168.172.1][-][-][trace][Time] Action 'country/view' spent 0.054883003234863 second.
+    in /var/www/components/ActionTimeFilter.php:21
+2023-08-27 15:39:27 [192.168.172.1][-][-][trace][Time] Action 'country/view' spent 0.058212041854858 second.
+    in /var/www/components/ActionTimeFilter.php:21
+2023-08-27 15:40:46 [192.168.172.1][-][-][trace][ActionTime] Action 'country/view' spent 0.055352926254272 second.
+    in /var/www/components/ActionTimeFilter.php:21
+2023-08-28 05:57:13 [192.168.172.1][-][-][trace][ActionTime] Action 'country/view' spent 0.4852819442749 second.
+    in /var/www/components/ActionTimeFilter.php:21
