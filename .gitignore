@@ -44,4 +44,5 @@
 
 /.env.local
 /.env.*.local/vendor/
-**/logs
+**/logs/
+**/*.log
