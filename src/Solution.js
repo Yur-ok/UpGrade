@@ -1,7 +1,7 @@
 function evaluateExpression(expression, variables) {
     // Преобразование инфиксного выражения в постфиксное
     function infixToPostfix(exp) {
-        const precedence = { '+': 1, '-': 1, '*': 2, '/': 2 };
+        const precedence = {'+': 1, '-': 1, '*': 2, '/': 2};
         const output = [];
         const operators = [];
 
