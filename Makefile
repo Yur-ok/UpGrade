@@ -11,7 +11,7 @@ down-clear:
 	docker-compose down -v --remove-orphans
 
 yii-init:
-	docker-compose run --rm composer create-project --prefer-dist yiisoft/yii2-app-basic ./src
+	docker-compose run --rm php-fpm composer create-project --prefer-dist yiisoft/yii2-app-basic .
 
 env:
 	docker-compose exec php-fpm cp -n .env.local.example .env.local
