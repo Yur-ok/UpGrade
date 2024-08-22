@@ -23,6 +23,10 @@ $config = [
             'identityClass' => 'app\models\User',
             'enableAutoLogin' => true,
         ],
+        'authManager' => [
+            'class' => 'yii\rbac\DbManager',
+            // 'defaultRoles' => ['guest'], // Опционально: если хотите задать роли по умолчанию
+        ],
         'errorHandler' => [
             'errorAction' => 'site/error',
         ],

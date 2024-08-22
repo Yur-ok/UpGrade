@@ -4,15 +4,48 @@ namespace app\controllers;
 
 use app\models\Goal;
 use app\models\Task;
-use yii\web\Controller;
 use app\traits\GoalTrait;
 use app\traits\TaskTrait;
-use yii\web\Response;
+use Yii;
+use yii\filters\AccessControl;
+use yii\web\Controller;
 
 class GoalController extends Controller
 {
     use GoalTrait;
     use TaskTrait;
+
+    public function behaviors(): array
+    {
+        return [
+            'access' => [
+                'class' => AccessControl::class,
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'actions' => ['index', 'view'],
+                        'roles' => ['@'], // Разрешаем просмотр всем авторизованным пользователям
+                    ],
+                    [
+                        'allow' => true,
+                        'actions' => ['create', 'update', 'add-task'],
+                        'roles' => ['@'],
+                        'matchCallback' => function ($rule, $action) {
+                            return Yii::$app->user->can('manageGoal');
+                        },
+                    ],
+                    [
+                        'allow' => true,
+                        'actions' => ['delete-goal', 'delete-task', 'complete-goal', 'complete-task'],
+                        'roles' => ['admin'], // Разрешаем удаление и завершение только администраторам
+                    ],
+                    [
+                        'allow' => false, // Запрещаем все остальные действия
+                    ],
+                ],
+            ],
+        ];
+    }
 
     public function actionIndex(): string
     {
@@ -36,6 +69,26 @@ class GoalController extends Controller
         ]);
     }
 
+    public function actionUpdate($id)
+    {
+        $goal = Goal::find()->where(['id' => $id, 'deleted_at' => null])->one();
+
+        if (!$goal) {
+            \Yii::$app->session->setFlash('error', 'Запрашиваемя цель не существует либо была удалена.');
+            return $this->redirect(['index']);
+        }
+
+        if ($goal->load(\Yii::$app->request->post()) && $goal->save()) {
+            \Yii::$app->session->setFlash('success', 'Цель успешно обновлена.');
+            return $this->redirect(['view', 'id' => $goal->id]);
+        }
+
+        return $this->render('update', [
+            'model' => $goal,
+        ]);
+    }
+
+
     public function actionView($id)
     {
         $goal = Goal::find()->where(['id' => $id, 'deleted_at' => null])->one();
@@ -57,10 +110,14 @@ class GoalController extends Controller
 
     public function actionAddTask($goalId)
     {
+        $goal = Goal::find()->where(['id' => $goalId, 'deleted_at' => null])->one();
+        if (!$goal) {
+            \Yii::$app->session->setFlash('error', 'Цель не найдена.');
+            return $this->redirect(['index']);
+        }
+
         $task = new Task();
         $task->goal_id = $goalId;
-
-        $goal = Goal::find()->where(['id' => $goalId, 'deleted_at' => null])->one();
 
         \Yii::$app->view->params['breadcrumbs'][] = ['label' => 'Goals', 'url' => ['index']];
         \Yii::$app->view->params['breadcrumbs'][] = ['label' => $goal->title, 'url' => ['view', 'id' => $goalId]];
@@ -75,17 +132,19 @@ class GoalController extends Controller
         ]);
     }
 
-    public function actionCompleteGoal($id): Response
+    public function actionCompleteGoal($id)
     {
         $goal = Goal::find()->where(['id' => $id, 'deleted_at' => null])->one();
         if ($goal) {
             $goal->completed = true;
-            $goal->save();
+            if (!$goal->save()) {
+                \Yii::$app->session->setFlash('error', 'Не удалось завершить цель.');
+            }
         }
         return $this->redirect(['view', 'id' => $id]);
     }
 
-    public function actionDeleteGoal($id): Response
+    public function actionDeleteGoal($id)
     {
         $goal = Goal::find()->where(['id' => $id, 'deleted_at' => null])->one();
         if ($goal) {
@@ -99,12 +158,14 @@ class GoalController extends Controller
         $task = Task::find()->where(['id' => $id, 'deleted_at' => null])->one();
         if ($task) {
             $task->completed = true;
-            $task->save();
+            if (!$task->save()) {
+                \Yii::$app->session->setFlash('error', 'Не удалось завершить задачу.');
+            }
         }
         return $this->redirect(['view', 'id' => $task->goal_id]);
     }
 
-    public function actionDeleteTask($id): Response
+    public function actionDeleteTask(int $id)
     {
         $task = Task::find()->where(['id' => $id, 'deleted_at' => null])->one();
         if ($task) {

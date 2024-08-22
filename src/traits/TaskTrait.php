@@ -28,6 +28,6 @@ trait TaskTrait
 
     public function getTasks($goalId)
     {
-        return Task::find()->where(['goal_id' => $goalId])->all();
+        return Task::find()->where(['goal_id' => $goalId, 'deleted_at' => null])->all();
     }
 }

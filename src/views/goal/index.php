@@ -17,8 +17,14 @@ $this->title = 'Мои Цели';
 <ul>
     <?php foreach ($goals as $goal): ?>
         <li>
-            <?= Html::a(Html::encode($goal->title), ['view', 'id' => $goal->id]) ?>:
-            <?= Html::encode($goal->description) ?>
+            <?php if ($goal->completed): ?>
+                <?= Html::tag('s', Html::a(Html::encode($goal->title), ['view', 'id' => $goal->id])) ?>
+                <?= Html::tag('s', Html::encode($goal->description)) ?>
+            <?php else: ?>
+                <?= Html::a(Html::encode($goal->title), ['view', 'id' => $goal->id]) ?>:
+                <?= Html::encode($goal->description) ?>
+            <?php endif; ?>
         </li>
     <?php endforeach; ?>
+
 </ul>

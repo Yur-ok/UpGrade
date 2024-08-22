@@ -14,6 +14,10 @@ $config = [
         '@tests' => '@app/tests',
     ],
     'components' => [
+        'authManager' => [
+            'class' => 'yii\rbac\DbManager',
+            // 'defaultRoles' => ['guest'], // Опционально: если хотите задать роли по умолчанию
+        ],
         'cache' => [
             'class' => 'yii\caching\FileCache',
         ],
