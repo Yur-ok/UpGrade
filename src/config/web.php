@@ -42,14 +42,15 @@ $config = [
             ],
         ],
         'db' => $db,
-        /*
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
+                // Подключение маршрутов
+                'goal' => 'goal/index',
             ],
         ],
-        */
+
     ],
     'params' => $params,
 ];
