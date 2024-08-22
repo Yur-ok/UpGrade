@@ -50,3 +50,4 @@
 .DS_Store
 
 src/vendor/
+docker/nginx/logs/error.log
