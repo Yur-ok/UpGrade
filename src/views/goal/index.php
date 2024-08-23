@@ -11,20 +11,29 @@ $this->title = 'Мои Цели';
 <h1><?= Html::encode($this->title) ?></h1>
 
 <p>
-    <?= Html::a('Создать Цель', ['create'], ['class' => 'btn btn-success']) ?>
+    <?php
+    if (Yii::$app->user->can('manageGoal')): ?>
+        <?= Html::a('Создать Цель', ['create'], ['class' => 'btn btn-success']) ?>
+    <?php
+    endif; ?>
 </p>
 
 <ul>
-    <?php foreach ($goals as $goal): ?>
+    <?php
+    foreach ($goals as $goal): ?>
         <li>
-            <?php if ($goal->completed): ?>
+            <?php
+            if ($goal->completed): ?>
                 <?= Html::tag('s', Html::a(Html::encode($goal->title), ['view', 'id' => $goal->id])) ?>
                 <?= Html::tag('s', Html::encode($goal->description)) ?>
-            <?php else: ?>
+            <?php
+            else: ?>
                 <?= Html::a(Html::encode($goal->title), ['view', 'id' => $goal->id]) ?>:
                 <?= Html::encode($goal->description) ?>
-            <?php endif; ?>
+            <?php
+            endif; ?>
         </li>
-    <?php endforeach; ?>
+    <?php
+    endforeach; ?>
 
 </ul>

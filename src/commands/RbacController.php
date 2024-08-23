@@ -38,6 +38,7 @@ class RbacController extends Controller
             $user = $auth->createRole('user');
             $auth->add($user);
             $auth->addChild($user, $auth->getPermission('createGoal'));
+            $auth->addChild($user, $auth->getPermission('manageGoal'));
         }
 
         // Проверяем наличие роли admin, если её нет, то создаем

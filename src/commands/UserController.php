@@ -10,6 +10,10 @@ class UserController extends Controller
 {
     public function actionCreateAdmin($username = 'admin', $password = 'admin', $email = 'admin@mail.com'): void
     {
+        if (User::findByUsername($username)) {
+            return;
+        }
+
         $user = new User();
         $user->username = $username;
         $user->email = $email;
@@ -24,6 +28,10 @@ class UserController extends Controller
 
     public function actionCreateUser($username = 'user', $password = 'user', $email = 'user@mail.com'): void
     {
+        if (User::findByUsername($username)) {
+            return;
+        }
+
         $user = new User();
         $user->username = $username;
         $user->email = $email;

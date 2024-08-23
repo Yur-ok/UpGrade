@@ -58,6 +58,9 @@ rename-permission: ## make rename-permission old=createGoal new=createTask
 add-permission-to-role:
 	$(YII_CMD) rbac/add-permission-to-role $(role) $(perm)
 
+assign-role-to-user:
+	$(YII_CMD) rbac/assign-role $(role) $(user)
+
 get-permissions-by-user:
 	$(YII_CMD) rbac/get-permissions-by-user $(user)
 
