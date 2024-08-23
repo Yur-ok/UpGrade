@@ -23,11 +23,20 @@ RUN apt-get update -q -y \
     procps \
     sudo \
     redis-server \
+    libfreetype6-dev \
+    libjpeg62-turbo-dev \
+    libpng-dev \
+    imagemagick \
+    libmagickwand-dev \
     && pecl install memcached \
     && pecl install ds \
     && pecl install redis \
     && docker-php-ext-enable redis \
     && docker-php-ext-enable memcached \
+    && docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-install gd \
+    && pecl install imagick \
+    && docker-php-ext-enable imagick \
     && rm -rf /var/lib/apt/lists/*
 
 RUN apt-get update -q -y \
