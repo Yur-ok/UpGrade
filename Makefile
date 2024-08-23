@@ -31,7 +31,21 @@ composer-install:
 composer-req: ## add new package pack=new/pack
 	docker-compose exec php-fpm composer require $(pack)
 
+# user команды
+create-admin: ## make create-admin
+	$(YII_CMD) user/create-admin $(name) $(pass) $(email)
+
+create-user: ## make create-user name=name pass=password email=email
+	$(YII_CMD) user/create-user $(name) $(pass) $(email)
+
 # RBAC команды
+rbac-init: rbac-migrations create-admin create-user create-first-roles
+rbac-migrations:
+	$(YII_CMD) migrate --migrationPath=@yii/rbac/migrations
+
+create-first-roles:
+	$(YII_CMD) rbac/init $(role)
+
 create-role: ## make create-role role=admin
 	$(YII_CMD) rbac/create-role $(role)
 

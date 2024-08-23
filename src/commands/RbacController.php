@@ -14,25 +14,30 @@ class RbacController extends Controller
         /** @var DbManager $auth */
         $auth = Yii::$app->authManager;
 
-        // Проверяем наличие разрешения createGoal, если его нет, то создаем
-        if (!$auth->getPermission('createGoal')) {
-            $createGoal = $auth->createPermission('createGoal');
-            $createGoal->description = 'Create a goal';
-            $auth->add($createGoal);
-        }
+        $permissions = [
+            'createGoal' => 'Create a goal',
+            'manageGoal' => 'Manage goals',
+            'deleteGoal' => 'Delete a goal',
+            'deleteTask' => 'Delete a task',
+            'createTask' => 'Create a task',
+            'completeGoal' => 'Complete a goal',
+            'completeTask' => 'Complete a task',
+        ];
 
-        // Проверяем наличие разрешения manageGoal, если его нет, то создаем
-        if (!$auth->getPermission('manageGoal')) {
-            $manageGoal = $auth->createPermission('manageGoal');
-            $manageGoal->description = 'Manage goals';
-            $auth->add($manageGoal);
+        foreach ($permissions as $name => $description) {
+            // Проверяем наличие разрешения $name, если его нет, то создаем
+            if (!$auth->getPermission($name)) {
+                $permission = $auth->createPermission($name);
+                $permission->description = $description;
+                $auth->add($permission);
+            }
         }
 
         // Проверяем наличие роли user, если её нет, то создаем
         if (!$auth->getRole('user')) {
             $user = $auth->createRole('user');
             $auth->add($user);
-            $auth->addChild($user, $createGoal);
+            $auth->addChild($user, $auth->getPermission('createGoal'));
         }
 
         // Проверяем наличие роли admin, если её нет, то создаем
@@ -40,10 +45,12 @@ class RbacController extends Controller
         if (!$admin) {
             $admin = $auth->createRole('admin');
             $auth->add($admin);
-            $auth->addChild($admin, $manageGoal);
+            $auth->addChild($admin, $auth->getPermission('manageGoal'));
+            $auth->addChild($admin, $auth->getPermission('completeGoal'));
+            $auth->addChild($admin, $auth->getPermission('completeTask'));
+            $auth->addChild($admin, $auth->getPermission('deleteTask'));
+            $auth->addChild($admin, $auth->getPermission('deleteGoal'));
             $auth->addChild($admin, $user);
-        } else {
-            $admin = $auth->getRole('admin'); // Получаем объект роли admin, если она уже существует
         }
 
         // Пытаемся найти пользователя с username 'admin'
