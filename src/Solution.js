@@ -3,12 +3,11 @@ function evaluateExpression(expression, variables) {
         const precedence = {'+': 1, '-': 1, '*': 2, '/': 2};
         const output = [];
         const operators = [];
-        let wasOperator = true; // Флаг, указывающий, что предыдущий символ был оператором
+        let wasOperator = true;
 
         for (let i = 0; i < exp.length; i++) {
             const char = exp[i];
 
-            // Проверка на число или переменную
             if ((char >= '0' && char <= '9') || (char >= 'a' && char <= 'z')) {
                 let token = '';
                 while (i < exp.length && ((exp[i] >= '0' && exp[i] <= '9') || exp[i] === '.' || (exp[i] >= 'a' && exp[i] <= 'z'))) {
@@ -27,7 +26,6 @@ function evaluateExpression(expression, variables) {
                 operators.pop();
                 wasOperator = false;
             } else if (char === '+' || char === '-' || char === '*' || char === '/') {
-                // Обработка унарного минуса
                 if (char === '-' && wasOperator) {
                     let token = '-';
                     i++;
@@ -60,7 +58,7 @@ function evaluateExpression(expression, variables) {
             const token = postfix[i];
             if (!isNaN(token)) {
                 stack.push(parseFloat(token));
-            } else if (token.length > 1 && token[0] === '-') { // Обработка отрицательных чисел
+            } else if (token.length > 1 && token[0] === '-') {
                 stack.push(parseFloat(token));
             } else {
                 const b = stack.pop();
@@ -106,12 +104,18 @@ function extractVariables(expression) {
 
 function main() {
     const expression = prompt("Введите уравнение:");
-    const variableNames = extractVariables(expression); 
+    const variableNames = extractVariables(expression);
     const variables = [];
 
     for (let i = 0; i < variableNames.length; i++) {
         const varName = variableNames[i];
-        const value = prompt("Введите значение для " + varName + ": ");
+        let value;
+        do {
+            value = prompt("Введите значение для " + varName + ": ");
+            if (isNaN(value)) {
+                alert("Пожалуйста, введите корректное число для " + varName + ".");
+            }
+        } while (isNaN(value)); // Повторяем, пока не введет число
         variables.push([varName, value]);
     }
 
