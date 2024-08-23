@@ -1,32 +1,49 @@
 function evaluateExpression(expression, variables) {
-    // Преобразование инфиксного выражения в постфиксное
     function infixToPostfix(exp) {
         const precedence = {'+': 1, '-': 1, '*': 2, '/': 2};
         const output = [];
         const operators = [];
+        let wasOperator = true; // Флаг, указывающий, что предыдущий символ был оператором
 
         for (let i = 0; i < exp.length; i++) {
             const char = exp[i];
 
-            if (char >= '0' && char <= '9') {
-                let num = '';
-                while (i < exp.length && exp[i] >= '0' && exp[i] <= '9') {
-                    num += exp[i++];
+            // Проверка на число или переменную
+            if ((char >= '0' && char <= '9') || (char >= 'a' && char <= 'z')) {
+                let token = '';
+                while (i < exp.length && ((exp[i] >= '0' && exp[i] <= '9') || exp[i] === '.' || (exp[i] >= 'a' && exp[i] <= 'z'))) {
+                    token += exp[i++];
                 }
-                output.push(num);
+                output.push(token);
                 i--;
+                wasOperator = false;
             } else if (char === '(') {
                 operators.push(char);
+                wasOperator = true;
             } else if (char === ')') {
                 while (operators.length && operators[operators.length - 1] !== '(') {
                     output.push(operators.pop());
                 }
                 operators.pop();
+                wasOperator = false;
             } else if (char === '+' || char === '-' || char === '*' || char === '/') {
-                while (operators.length && precedence[operators[operators.length - 1]] >= precedence[char]) {
-                    output.push(operators.pop());
+                // Обработка унарного минуса
+                if (char === '-' && wasOperator) {
+                    let token = '-';
+                    i++;
+                    while (i < exp.length && (exp[i] >= '0' && exp[i] <= '9')) {
+                        token += exp[i++];
+                    }
+                    output.push(token);
+                    i--;
+                    wasOperator = false;
+                } else {
+                    while (operators.length && precedence[operators[operators.length - 1]] >= precedence[char]) {
+                        output.push(operators.pop());
+                    }
+                    operators.push(char);
+                    wasOperator = true;
                 }
-                operators.push(char);
             }
         }
 
@@ -37,13 +54,13 @@ function evaluateExpression(expression, variables) {
         return output;
     }
 
-    // Вычисление значения постфиксного выражения
     function evaluatePostfix(postfix) {
         const stack = [];
-
         for (let i = 0; i < postfix.length; i++) {
             const token = postfix[i];
-            if (token >= '0' && token <= '9') {
+            if (!isNaN(token)) {
+                stack.push(parseFloat(token));
+            } else if (token.length > 1 && token[0] === '-') { // Обработка отрицательных чисел
                 stack.push(parseFloat(token));
             } else {
                 const b = stack.pop();
@@ -58,7 +75,6 @@ function evaluateExpression(expression, variables) {
         return stack[0];
     }
 
-    // Замена переменных в выражении их значениями
     function replaceVariables(exp, vars) {
         let updatedExpression = exp;
         for (let i = 0; i < vars.length; i++) {
@@ -70,15 +86,11 @@ function evaluateExpression(expression, variables) {
         return updatedExpression;
     }
 
-    // Замена переменных на их значения
     const updatedExpression = replaceVariables(expression, variables);
-
-    // Преобразование в постфиксную форму и вычисление результата
     const postfix = infixToPostfix(updatedExpression);
     return evaluatePostfix(postfix);
 }
 
-// Функция для извлечения переменных из выражения
 function extractVariables(expression) {
     const variables = [];
     for (let i = 0; i < expression.length; i++) {
@@ -92,26 +104,19 @@ function extractVariables(expression) {
     return variables;
 }
 
-// Основная программа
 function main() {
-    // Запрос уравнения у пользователя
     const expression = prompt("Введите уравнение:");
-
-    // Извлечение переменных из уравнения
-    const variableNames = extractVariables(expression);
-
-    // Ввод значений для переменных
+    const variableNames = extractVariables(expression); 
     const variables = [];
+
     for (let i = 0; i < variableNames.length; i++) {
         const varName = variableNames[i];
         const value = prompt("Введите значение для " + varName + ": ");
         variables.push([varName, value]);
     }
 
-    // Вычисление результата
     const result = evaluateExpression(expression, variables);
     console.log("Результат: " + result);
 }
 
-// Запуск основной программы
 main();
