@@ -36,6 +36,18 @@ class User extends ActiveRecord implements IdentityInterface
         return static::findOne(['username' => $username]);
     }
 
+    public function generateAuthToken(): void
+    {
+        $this->auth_token = \Yii::$app->security->generateRandomString();
+        $this->save(false); // Сохраняем токен в базе данных
+    }
+
+    public function removeAuthToken(): void
+    {
+        $this->auth_token = null;
+        $this->save(false);
+    }
+
     public function getId()
     {
         return $this->getPrimaryKey();

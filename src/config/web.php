@@ -15,6 +15,9 @@ $config = [
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
             'cookieValidationKey' => '3EvwIUw7BAZrNGNjH5OcDPbcKr4OZoC3',
+            'parsers' => [
+                'application/json' => 'yii\web\JsonParser',
+            ]
         ],
         'cache' => [
             'class' => 'yii\caching\FileCache',
@@ -54,6 +57,8 @@ $config = [
                 'goal' => 'goal/index',
                 'reflection' => 'reflection/index',
                 'reflection/create' => 'reflection/create',
+                ['class' => 'yii\rest\UrlRule', 'controller' => 'GoalApiController'],
+                ['class' => 'yii\rest\UrlRule', 'controller' => 'TaskApiController'],
             ],
         ],
 
