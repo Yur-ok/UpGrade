@@ -13,6 +13,16 @@ class User extends ActiveRecord implements IdentityInterface
         return '{{%user}}';
     }
 
+    public function fields()
+    {
+        $fields = parent::fields();
+
+        // удаляем небезопасные поля
+        unset($fields['auth_key'], $fields['password_hash'], $fields['access_token'], $fields['status']);
+
+        return $fields;
+    }
+
     public function behaviors()
     {
         return [

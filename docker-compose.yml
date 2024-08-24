@@ -6,8 +6,9 @@ services:
       - "host.docker.internal:host-gateway"
     build: ./docker/php
     environment:
-      - "PSQL_PORT=5432"
-      - "PSQL_HOST=postgres"
+      PHP_IDE_CONFIG: "serverName=test.loc"
+      PSQL_PORT: "5432"
+      PSQL_HOST: "postgres"
     volumes:
       - ./src:/var/www
       - composer:/root/.composer/cache

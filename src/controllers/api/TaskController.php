@@ -8,7 +8,7 @@ use yii\filters\AccessControl;
 use yii\filters\Cors;
 use app\models\Task;
 
-class TaskApiController extends ActiveController
+class TaskController extends ActiveController
 {
     public $modelClass = Task::class;
 

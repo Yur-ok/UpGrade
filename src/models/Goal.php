@@ -41,17 +41,17 @@ class Goal extends ActiveRecord
         return $this->save(false);
     }
 
-    public static function findOne($condition)
+    public static function findOne($id)
     {
-        $query = static::find();
-
-        if (is_array($condition)) {
-            $condition['deleted_at'] = null;
-        } else {
-            $query = $query->andWhere(['deleted_at' => null]);
+        if (!is_numeric($id) || (int)$id != $id) {
+            throw new \InvalidArgumentException('ID must be an integer.');
         }
 
-        return $query->andWhere($condition)->one();
+        $query = static::find()
+            ->andWhere(['deleted_at' => null])
+            ->andWhere(['id' => (int)$id]);
+
+        return $query->one();
     }
 
 }

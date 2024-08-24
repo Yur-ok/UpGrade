@@ -9,7 +9,7 @@ $config = [
     'bootstrap' => ['log'],
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
-        '@npm'   => '@vendor/npm-asset',
+        '@npm' => '@vendor/npm-asset',
     ],
     'components' => [
         'request' => [
@@ -39,29 +39,57 @@ $config = [
             // send all mails to a file by default.
             'useFileTransport' => true,
         ],
+        //        'log' => [
+        //            'traceLevel' => YII_DEBUG ? 3 : 0,
+        //            'targets' => [
+        //                [
+        //                    'class' => 'yii\log\FileTarget',
+        //                    'levels' => ['error', 'warning'],
+        //                ],
+        //            ],
+        //        ],
         'log' => [
-            'traceLevel' => YII_DEBUG ? 3 : 0,
+            'traceLevel' => YII_DEBUG ? 1 : 0,
             'targets' => [
                 [
                     'class' => 'yii\log\FileTarget',
-                    'levels' => ['error', 'warning'],
+                    'levels' => ['error', 'warning', 'info', 'trace'],  // Добавлены уровни info и trace
+                    'logVars' => [],  // Отключает запись глобальных переменных, чтобы логи были чище
+                    'categories' => [
+                        'application',
+                        'yii\db\*',  // Логи SQL запросов
+                        'yii\web\HttpException:*',  // Логи HTTP ошибок
+                    ],
                 ],
             ],
         ],
+
         'db' => $db,
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
-                // Подключение маршрутов
+                // Подключение web маршрутов
                 'goal' => 'goal/index',
                 'reflection' => 'reflection/index',
                 'reflection/create' => 'reflection/create',
-                ['class' => 'yii\rest\UrlRule', 'controller' => 'GoalApiController'],
-                ['class' => 'yii\rest\UrlRule', 'controller' => 'TaskApiController'],
+                // Подключение api маршрутов
+                [
+                    'class' => 'yii\rest\UrlRule',
+                    'controller' => ['api/goal', 'api/task', 'api/auth',],
+                    'pluralize' => false,
+//                    'prefix' => 'api' // только для урлов ?!
+//                    'extraPatterns' => [
+//                        'PUT,PATCH goal/update/<id>' => 'api/goal/update',
+//                        'POST login' => 'login',
+//                        'POST register' => 'register',
+//                        'POST logout' => 'logout',
+//                        'GET me' => 'me',
+//                        'GET test' => 'test',
+//                    ],
+                ],
             ],
         ],
-
     ],
     'params' => $params,
 ];

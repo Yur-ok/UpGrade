@@ -8,7 +8,7 @@ use yii\filters\auth\HttpBearerAuth;
 use yii\filters\Cors;
 use yii\rest\ActiveController;
 
-class GoalApiController extends ActiveController
+class GoalController extends ActiveController
 {
     public $modelClass = Goal::class;
 
@@ -16,7 +16,7 @@ class GoalApiController extends ActiveController
     {
         $behaviors = parent::behaviors();
 
-        // Добавляем поддержку CORS для работы с запросами с других доменов
+        // Поддержка CORS
         $behaviors['corsFilter'] = [
             'class' => Cors::class,
         ];
@@ -26,7 +26,7 @@ class GoalApiController extends ActiveController
             'class' => HttpBearerAuth::class,
         ];
 
-        // RBAC проверка разрешений
+        // Проверка RBAC
         $behaviors['access'] = [
             'class' => AccessControl::class,
             'rules' => [
@@ -40,14 +40,7 @@ class GoalApiController extends ActiveController
         return $behaviors;
     }
 
-    // Дополнительные действия, такие как завершение цели
-    public function actions()
-    {
-        $actions = parent::actions();
-        unset($actions['update']); // Если хотите заменить стандартное действие update
-        return $actions;
-    }
-
+    // Дополнительные действия
     public function actionComplete($id)
     {
         $goal = $this->findModel($id);
