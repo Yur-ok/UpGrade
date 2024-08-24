@@ -52,9 +52,27 @@ class User extends ActiveRecord implements IdentityInterface
         $this->save(false); // Сохраняем токен в базе данных
     }
 
+    public function generateAuthKey(): void
+    {
+        $this->auth_key = \Yii::$app->security->generateRandomString();
+        $this->save(false); // Сохраняем токен в базе данных
+    }
+
+    public function generateAccessToken(): void
+    {
+        $this->access_token = \Yii::$app->security->generateRandomString();
+        $this->save(false); // Сохраняем токен в базе данных
+    }
+
     public function removeAuthToken(): void
     {
         $this->auth_token = null;
+        $this->save(false);
+    }
+
+    public function removeAccessToken(): void
+    {
+        $this->access_token = null;
         $this->save(false);
     }
 

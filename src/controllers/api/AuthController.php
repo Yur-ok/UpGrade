@@ -42,13 +42,12 @@ class AuthController extends Controller
      */
     public function actionLogin()
     {
-        Yii::info('Login api action called', __METHOD__);
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post(), '') && $model->login()) {
             $user = Yii::$app->user->identity;
-            $user->generateAuthToken(); // Генерация токена
+            $user->generateAccessToken(); // Генерация токена
             return [
-                'access_token' => $user->auth_token,
+                'access_token' => $user->access_token,
             ];
         }
 
@@ -66,7 +65,7 @@ class AuthController extends Controller
     {
         $user = Yii::$app->user->identity;
         if ($user) {
-            $user->removeAuthToken(); // Удаление токена
+            $user->removeAccessToken(); // Удаление токена
             return ['message' => 'Logout successful'];
         }
 

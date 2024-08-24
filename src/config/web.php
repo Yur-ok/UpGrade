@@ -76,11 +76,10 @@ $config = [
                 // Подключение api маршрутов
                 [
                     'class' => 'yii\rest\UrlRule',
-                    'controller' => ['api/goal', 'api/task', 'api/auth',],
+                    'controller' => ['api/goal', 'api/task', 'api/auth'],
                     'pluralize' => false,
-//                    'prefix' => 'api' // только для урлов ?!
+//                    'prefix' => 'api',
 //                    'extraPatterns' => [
-//                        'PUT,PATCH goal/update/<id>' => 'api/goal/update',
 //                        'POST login' => 'login',
 //                        'POST register' => 'register',
 //                        'POST logout' => 'logout',

@@ -32,7 +32,24 @@ class TaskController extends ActiveController
             'rules' => [
                 [
                     'allow' => true,
-                    'roles' => ['admin', 'user'],
+                    'actions' => ['index', 'view'],
+                    'roles' => ['@'], // Разрешаем просмотр всем авторизованным пользователям
+                ],
+                [
+                    'allow' => true,
+                    'actions' => ['create', 'update', 'add-task'],
+                    'roles' => ['@'],
+                    'matchCallback' => function ($rule, $action) {
+                        return Yii::$app->user->can('manageGoal');
+                    },
+                ],
+                [
+                    'allow' => true,
+                    'actions' => ['delete-goal', 'delete-task', 'complete-goal', 'complete-task'],
+                    'roles' => ['admin'], // Разрешаем удаление и завершение только администраторам
+                ],
+                [
+                    'allow' => false, // Запрещаем все остальные действия
                 ],
             ],
         ];
