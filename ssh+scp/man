@@ -1,0 +1,14 @@
+Запустим контейнер, чтобы он был доступен для подключения по SSH.
+docker run -d -p 2222:22 --name ssh-container my-ssh-server
+
+Это запустит контейнер и сопоставит порт 2222 на локальной машине с портом 22 внутри контейнера.
+
+Подключение к контейнеру по SSH
+ssh root@localhost -p 2222
+
+
+Копирование файла с локальной машины в контейнер
+scp -P 2222 /path/to/local/file.txt root@localhost:/path/in/container/
+
+Копирование файла из контейнера на локальную машину
+scp -P 2222 root@localhost:/path/in/container/file.txt /path/to/local/
