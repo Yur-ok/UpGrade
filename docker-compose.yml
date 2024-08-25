@@ -41,6 +41,17 @@ services:
       - "POSTGRES_USER=root"
       - "POSTGRES_PASSWORD=root"
 
+  postgres-test:
+    image: postgres:11.2-alpine
+    volumes:
+      - postgres_db_test:/var/lib/postgresql/data
+    ports:
+      - "54322:5432"
+    environment:
+      - "POSTGRES_DB=upgrade_test"
+      - "POSTGRES_USER=root"
+      - "POSTGRES_PASSWORD=root"
+
   redis:
     image: redis:7-alpine
     volumes:
@@ -62,6 +73,7 @@ services:
 
 volumes:
   postgres_db:
+  postgres_db_test:
   redis_db:
   composer:
   rabbitmq-api:

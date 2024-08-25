@@ -41,6 +41,11 @@
       "app\\" : "src/"
     }
   },
+  "autoload-dev" : {
+    "psr-4" : {
+      "tests\\" : "src/tests/"
+    }
+  },
   "config" : {
     "allow-plugins" : {
       "yiisoft/yii2-composer" : true
