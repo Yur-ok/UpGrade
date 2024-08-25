@@ -24,6 +24,7 @@ services:
       - ./src:/var/www
       - ./docker/nginx/config:/etc/nginx/conf.d
       - ./docker/nginx/logs:/var/log/nginx
+      - ./docker/nginx/ssl:/etc/nginx/ssl
     depends_on:
       - php-fpm
     ports:

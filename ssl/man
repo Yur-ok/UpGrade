@@ -1,0 +1,60 @@
+1: Создание самоподписанного SSL-сертификата
+Для начала создадим самоподписанный SSL-сертификат и приватный ключ.
+
+Команды для генерации сертификата
+Выполните следующие команды в терминале на вашей локальной машине:
+
+mkdir -p nginx/ssl
+openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout nginx/ssl/selfsigned.key -out nginx/ssl/selfsigned.crt
+
+Пояснения:
+req -x509: генерирует новый X.509 сертификат (самоподписанный).
+-nodes: указывает OpenSSL не запрашивать фразу-пароль для приватного ключа.
+-days 365: срок действия сертификата (365 дней).
+-newkey rsa:2048: генерирует новый ключ RSA с длиной 2048 бит.
+-keyout nginx/ssl/selfsigned.key: путь к создаваемому приватному ключу.
+-out nginx/ssl/selfsigned.crt: путь к создаваемому самоподписанному сертификату.
+Когда будет выполнена команда openssl req, вас попросят ввести некоторую информацию, например,
+страну, организацию и так далее. Можете заполнить эти поля по своему усмотрению.
+
+
+
+
+2. nginx уже содержит сертифика
+server {
+    listen 80;
+    server_name localhost;
+
+    # Перенаправление HTTP на HTTPS
+    return 301 https://$host$request_uri;
+}
+
+server {
+    listen 443 ssl;
+    server_name localhost;
+
+    ssl_certificate /etc/nginx/ssl/selfsigned.crt;
+    ssl_certificate_key /etc/nginx/ssl/selfsigned.key;
+
+    ssl_protocols TLSv1.2 TLSv1.3;
+    ssl_ciphers HIGH:!aNULL:!MD5;
+
+    location / {
+        root /usr/share/nginx/html;
+        index index.html index.htm;
+        try_files $uri $uri/ =404
+
+
+3. docker-compose.yml
+nginx:
+    image: nginx:latest
+    container_name: nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./src:/var/www
+      - ./docker/nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+      - ./ssl:/etc/nginx/ssl
+    networks:
+      - app-network
