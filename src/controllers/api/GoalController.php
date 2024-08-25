@@ -8,6 +8,7 @@ use yii\filters\AccessControl;
 use yii\filters\auth\HttpBearerAuth;
 use yii\filters\Cors;
 use yii\rest\ActiveController;
+use yii\web\NotFoundHttpException;
 
 class GoalController extends ActiveController
 {
@@ -28,32 +29,32 @@ class GoalController extends ActiveController
         ];
 
         // Проверка RBAC
-        $behaviors['access'] = [
-            'class' => AccessControl::class,
-            'rules' => [
-                [
-                    'allow' => true,
-                    'actions' => ['index', 'view'],
-                    'roles' => ['@'], // Разрешаем просмотр всем авторизованным пользователям
-                ],
-                [
-                    'allow' => true,
-                    'actions' => ['create', 'update'],
-                    'roles' => ['@'],
-                    'matchCallback' => function ($rule, $action) {
-                        return Yii::$app->user->can('manageGoal');
-                    },
-                ],
-                [
-                    'allow' => true,
-                    'actions' => ['delete'],
-                    'roles' => ['admin'], // Разрешаем удаление и завершение только администраторам
-                ],
-                [
-                    'allow' => false, // Запрещаем все остальные действия
-                ],
-            ],
-        ];
+//        $behaviors['access'] = [
+//            'class' => AccessControl::class,
+//            'rules' => [
+//                [
+//                    'allow' => true,
+//                    'actions' => ['index', 'view'],
+//                    'roles' => ['@'], // Разрешаем просмотр всем авторизованным пользователям
+//                ],
+//                [
+//                    'allow' => true,
+//                    'actions' => ['create', 'update'],
+//                    'roles' => ['@'],
+//                    'matchCallback' => function ($rule, $action) {
+//                        return Yii::$app->user->can('manageGoal');
+//                    },
+//                ],
+//                [
+//                    'allow' => true,
+//                    'actions' => ['delete'],
+//                    'roles' => ['admin'], // Разрешаем удаление и завершение только администраторам
+//                ],
+//                [
+//                    'allow' => false, // Запрещаем все остальные действия
+//                ],
+//            ],
+//        ];
 
         return $behaviors;
     }
@@ -69,7 +70,20 @@ class GoalController extends ActiveController
 
         return ['error' => 'Unable to complete goal'];
     }
-
+//    public function actionDelete($id)
+//    {
+//        $model = Goal::findOne($id);
+//        if (!$model) {
+//            throw new NotFoundHttpException("Goal not found");
+//        }
+//
+//        if ($model->delete()) {
+//            Yii::$app->response->statusCode = 204;
+//        } else {
+//            Yii::$app->response->statusCode = 400;
+//            return ['errors' => $model->getErrors()];
+//        }
+//    }
     protected function findModel($id)
     {
         return Goal::findOne($id);

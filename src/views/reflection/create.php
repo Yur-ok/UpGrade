@@ -7,7 +7,7 @@ use yii\widgets\ActiveForm;
 /* @var $model app\models\Goal */
 /* @var $tasks array */
 
-$this->title = 'Create Goal';
+$this->title = 'Create GoalManager';
 ?>
 
 <h1><?= Html::encode($this->title) ?></h1>
@@ -17,7 +17,7 @@ $this->title = 'Create Goal';
     <?php $form = ActiveForm::begin(); ?>
 
     <?php
-    // Генерация полей формы на основе правил валидации модели Goal
+    // Генерация полей формы на основе правил валидации модели GoalManager
     $renderedFields = [];
     foreach ($model->rules() as $rule) {
         $attributes = (array) $rule[0];

@@ -24,7 +24,7 @@ class GoalTest extends Unit
     public function testCreateGoal()
     {
         $goal = new Goal();
-        $goal->title = 'New Goal';
+        $goal->title = 'New GoalManager';
         $goal->description = 'This is a new goal.';
 
         expect_that($goal->save());

@@ -25,6 +25,8 @@ $config = [
         'user' => [
             'identityClass' => 'app\models\User',
             'enableAutoLogin' => true,
+            'enableSession' => true,  // Для стандартных страниц включены сессии
+            'loginUrl' => ['site/login'],
         ],
         'authManager' => [
             'class' => 'yii\rbac\DbManager',
@@ -68,24 +70,39 @@ $config = [
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
+//            'enableStrictParsing' => true,
             'rules' => [
                 // Подключение web маршрутов
                 'goal' => 'goal/index',
                 'reflection' => 'reflection/index',
                 'reflection/create' => 'reflection/create',
                 // Подключение api маршрутов
+                'DELETE api/goal/<id:\d+>' => 'api/goal/delete',
+                'POST api/goal' => 'api/goal/create',
                 [
                     'class' => 'yii\rest\UrlRule',
-                    'controller' => ['api/goal', 'api/task', 'api/auth'],
+                    'controller' => ['api/goal'],
                     'pluralize' => false,
-//                    'prefix' => 'api',
+                    'prefix' => 'api',
 //                    'extraPatterns' => [
-//                        'POST login' => 'login',
-//                        'POST register' => 'register',
-//                        'POST logout' => 'logout',
-//                        'GET me' => 'me',
-//                        'GET test' => 'test',
+//                        'GET,HEAD goal' => 'index',
+//                        'POST api/goal' => 'create',
+//                        'GET,HEAD goal/<id>' => 'view',
+//                        'PUT goal/<id>' => 'update',
+//                        'DELETE goal/<id>' => 'delete',
 //                    ],
+                ],
+                [
+                    'class' => 'yii\rest\UrlRule',
+                    'controller' => ['api/task'],
+                    'pluralize' => false,
+                    'prefix' => 'api',
+                ],
+                [
+                    'class' => 'yii\rest\UrlRule',
+                    'controller' => ['api/auth'],
+                    'pluralize' => false,
+                    'prefix' => 'api',
                 ],
             ],
         ],

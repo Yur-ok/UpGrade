@@ -11,7 +11,7 @@ $this->title = 'Reflection API Example';
 <h1><?= Html::encode($this->title) ?></h1>
 
 <p>
-    <?= Html::a('Create Goal', ['create'], ['class' => 'btn btn-success']) ?>
+    <?= Html::a('Create GoalManager', ['create'], ['class' => 'btn btn-success']) ?>
 </p>
 
 <h2>Existing Goals</h2>
