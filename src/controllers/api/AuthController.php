@@ -3,6 +3,9 @@
 namespace app\controllers\api;
 
 use Yii;
+use yii\filters\AccessControl;
+use yii\filters\auth\HttpBearerAuth;
+use yii\filters\Cors;
 use yii\rest\Controller;
 use app\models\LoginForm;
 use app\models\User;
@@ -65,7 +68,8 @@ class AuthController extends Controller
     {
         $user = Yii::$app->user->identity;
         if ($user) {
-            $user->removeAccessToken(); // Удаление токена
+            $user->removeAccessToken();
+            Yii::$app->user->logout();
             return ['message' => 'Logout successful'];
         }
 
@@ -75,10 +79,18 @@ class AuthController extends Controller
     /**
      * Получение информации о текущем пользователе.
      *
-     * @return User|null
+     * @return User|string[]|\yii\web\IdentityInterface
      */
     public function actionMe()
     {
+        if (Yii::$app->user->isGuest) {
+            Yii::$app->response->statusCode = 401;
+            return [
+                'status' => 'error',
+                'message' => 'User is not authenticated.',
+            ];
+        }
+
         return Yii::$app->user->identity;
     }
 
