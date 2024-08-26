@@ -52,8 +52,6 @@ $config = [
             'rules' => [
                 // Подключение маршрутов
                 'goal' => 'goal/index',
-                'reflection' => 'reflection/index',
-                'reflection/create' => 'reflection/create',
             ],
         ],
 
