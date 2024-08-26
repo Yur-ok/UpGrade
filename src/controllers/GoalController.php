@@ -2,8 +2,10 @@
 
 namespace app\controllers;
 
+use app\helpers\FormGenerator;
 use app\models\Goal;
 use app\models\Task;
+use Yii;
 use yii\web\Controller;
 use app\traits\GoalTrait;
 use app\traits\TaskTrait;
@@ -26,15 +28,18 @@ class GoalController extends Controller
     public function actionCreate()
     {
         $model = new Goal();
+        $formHtml = FormGenerator::generateForm($model);
 
-        if ($model->load(\Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['index']);
         }
 
         return $this->render('create', [
+            'formHtml' => $formHtml,
             'model' => $model,
         ]);
     }
+
 
     public function actionView($id)
     {
