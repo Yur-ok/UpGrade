@@ -69,3 +69,6 @@ list-roles-with-permissions:
 
 list-permissions:
 	$(YII_CMD) rbac/list-permissions
+
+test-calc:
+	docker-compose run --rm php-fpm ./vendor/bin/codecept run tests/unit/models/CalculatorTest.php
