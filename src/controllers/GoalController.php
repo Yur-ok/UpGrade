@@ -4,30 +4,51 @@ namespace app\controllers;
 
 use app\models\Goal;
 use app\models\Task;
+use app\traits\AdvancedLogTrait;
+use Yii;
 use yii\web\Controller;
-use app\traits\GoalTrait;
-use app\traits\TaskTrait;
 use yii\web\Response;
 
 class GoalController extends Controller
 {
-    use GoalTrait;
-    use TaskTrait;
+    use AdvancedLogTrait;
+
 
     public function actionIndex(): string
     {
         $goals = Goal::find()->where(['deleted_at' => null])->all();
-
-        \Yii::$app->view->params['breadcrumbs'][] = 'Goals';
-
+        $this->logEvent('Viewed all goals');
         return $this->render('index', ['goals' => $goals]);
+    }
+
+    public function actionView($id)
+    {
+        $goal = Goal::findOne(['id' => $id, 'deleted_at' => null]);
+        if (!$goal) {
+            \Yii::$app->session->setFlash('error', 'Запрашиваемя цель не существует либо была удалена.');
+            return $this->redirect(['index']);
+        }
+        $goal->clearTaskCache();
+
+        $tasks = $goal->getTasks();
+
+        \Yii::$app->view->params['breadcrumbs'][] = ['label' => 'Goals', 'url' => ['index']];
+        \Yii::$app->view->params['breadcrumbs'][] = $goal->title;
+
+        $this->logEvent('Viewed goal', 'info', ['goal_id' => $goal->id]);
+
+        return $this->render('view', [
+            'goal' => $goal,
+            'tasks' => $tasks,
+        ]);
     }
 
     public function actionCreate()
     {
         $model = new Goal();
 
-        if ($model->load(\Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post()) && $model->saveGoal()) {
+            $this->logAction('Goal created successfully');
             return $this->redirect(['index']);
         }
 
@@ -36,27 +57,14 @@ class GoalController extends Controller
         ]);
     }
 
-    public function actionView($id)
+    public function actionAddTask($goalId)
     {
-        $goal = Goal::find()->where(['id' => $id, 'deleted_at' => null])->one();
+        $goal = Goal::findOne(['id' => $goalId, 'deleted_at' => null]);
         if (!$goal) {
-            \Yii::$app->session->setFlash('error', 'Запрашиваемя цель не существует либо была удалена.');
+            \Yii::$app->session->setFlash('error', 'Цель не найдена.');
             return $this->redirect(['index']);
         }
 
-        $tasks = $this->getTasks($id);
-
-        \Yii::$app->view->params['breadcrumbs'][] = ['label' => 'Goals', 'url' => ['index']];
-        \Yii::$app->view->params['breadcrumbs'][] = $goal->title;
-
-        return $this->render('view', [
-            'goal' => $goal,
-            'tasks' => $tasks,
-        ]);
-    }
-
-    public function actionAddTask($goalId)
-    {
         $task = new Task();
         $task->goal_id = $goalId;
 
@@ -66,7 +74,9 @@ class GoalController extends Controller
         \Yii::$app->view->params['breadcrumbs'][] = ['label' => $goal->title, 'url' => ['view', 'id' => $goalId]];
         \Yii::$app->view->params['breadcrumbs'][] = 'Add Task';
 
-        if ($task->load(\Yii::$app->request->post()) && $task->save()) {
+        if ($task->load(Yii::$app->request->post()) && $task->save()) {
+            $goal->clearTaskCache();
+            $this->logAction('Task added', ['goal_id' => $goalId, 'task_id' => $task->id]);
             return $this->redirect(['view', 'id' => $goalId]);
         }
 
@@ -81,37 +91,53 @@ class GoalController extends Controller
         if ($goal) {
             $goal->completed = true;
             $goal->save();
+            $this->logAction('Goal marked as completed', ['goal_id' => $id]);
         }
         return $this->redirect(['view', 'id' => $id]);
     }
 
-    public function actionDeleteGoal($id): Response
-    {
-        $goal = Goal::find()->where(['id' => $id, 'deleted_at' => null])->one();
-        if ($goal) {
-            $goal->softDelete();
-        }
-        return $this->redirect(['index']);
-    }
 
     public function actionCompleteTask($id)
     {
-        $task = Task::find()->where(['id' => $id, 'deleted_at' => null])->one();
+        $task = Task::findOne(['id' => $id, 'deleted_at' => null]);
         if ($task) {
             $task->completed = true;
-            $task->save();
+            if ($task->save()) {
+                $task->goal->clearTaskCache();
+                $this->logAction('Task completed', ['task_id' => $task->id]);
+            } else {
+                \Yii::$app->session->setFlash('error', 'Не удалось завершить задачу.');
+            }
+            return $this->redirect(['view', 'id' => $task->goal_id]);
         }
-        return $this->redirect(['view', 'id' => $task->goal_id]);
+
+        return $this->redirect(['index']);
     }
 
-    public function actionDeleteTask($id): Response
+    public function actionDeleteTask($id)
     {
-        $task = Task::find()->where(['id' => $id, 'deleted_at' => null])->one();
+        $task = Task::findOne(['id' => $id, 'deleted_at' => null]);
         if ($task) {
             $goalId = $task->goal_id;
             $task->softDelete();
+            $task->goal->clearTaskCache();
+            $this->logAction('Task deleted', ['task_id' => $task->id]);
             return $this->redirect(['view', 'id' => $goalId]);
         }
+
+        return $this->redirect(['index']);
+    }
+
+    public function actionDeleteGoal($id)
+    {
+        $goal = Goal::findOne(['id' => $id, 'deleted_at' => null]);
+        if ($goal) {
+            $goal->softDelete();
+            $goal->clearTaskCache();
+            $this->logAction('Goal deleted', ['goal_id' => $goal->id]);
+            return $this->redirect(['index']);
+        }
+
         return $this->redirect(['index']);
     }
 }

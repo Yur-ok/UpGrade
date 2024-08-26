@@ -37,10 +37,25 @@ $config = [
             'targets' => [
                 [
                     'class' => 'yii\log\FileTarget',
-                    'levels' => ['error', 'warning'],
+                    'levels' => ['error', 'warning', 'info'],
+                    'categories' => ['GoalController'],
+                    'except' => ['yii\db\*'],
+                    'logFile' => '@runtime/logs/app.log',
+                    'logVars' => [],
+                ],
+                [
+                    'class' => 'yii\log\FileTarget',
+                    'levels' => ['info'],
+                    'categories' => ['yii\db\*'],
+                    'logFile' => '@runtime/logs/sql.log',
+                    'logVars' => [],
+//                    'prefix' => function ($message) {
+//                        return '';
+//                    },
                 ],
             ],
         ],
+
         'db' => $db,
         'urlManager' => [
             'enablePrettyUrl' => true,
