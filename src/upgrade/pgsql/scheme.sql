@@ -5,11 +5,14 @@ WHERE table_name = 'goals';
 
 
 --Получить первичный ключ таблицы goals
-SELECT a.attname AS column_name
-FROM pg_index i
-         JOIN pg_attribute a ON a.attnum = ANY (i.indkey)
-WHERE i.indrelid = 'goals'::regclass
-  AND i.indisprimary;
+SELECT kcu.column_name
+FROM information_schema.table_constraints AS tc
+         JOIN
+     information_schema.key_column_usage AS kcu
+     ON tc.constraint_name = kcu.constraint_name
+         AND tc.table_name = kcu.table_name
+WHERE tc.table_name = 'goals'
+  AND tc.constraint_type = 'PRIMARY KEY';
 
 
 -- Получить название поле для связи двух таблиц, имеющих ограничение целостности в виде внешнего ключа
