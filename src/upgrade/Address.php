@@ -1,7 +1,5 @@
 <?php
 
-namespace app;
-
 trait Country {
     public function getCountryName()
     {
