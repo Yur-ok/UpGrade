@@ -24,7 +24,7 @@ class GoalController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['index', 'view'],
-                        'roles' => ['@'], // Разрешаем просмотр всем авторизованным пользователям
+                        'roles' => ['@'],
                     ],
                     [
                         'allow' => true,
@@ -37,10 +37,10 @@ class GoalController extends Controller
                     [
                         'allow' => true,
                         'actions' => ['delete-goal', 'delete-task', 'complete-goal', 'complete-task'],
-                        'roles' => ['admin'], // Разрешаем удаление и завершение только администраторам
+                        'roles' => ['admin'],
                     ],
                     [
-                        'allow' => false, // Запрещаем все остальные действия
+                        'allow' => false, 
                     ],
                 ],
             ],
