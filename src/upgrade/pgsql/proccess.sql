@@ -5,8 +5,11 @@ WHERE state = 'active';
 
 -- 2) Получить список текущих блокировок
 SELECT *
-FROM pg_locks;
-
+FROM pg_locks
+         JOIN
+     pg_stat_activity
+     ON pg_locks.pid = pg_stat_activity.pid
+where pg_locks.granted IS TRUE;
 
 -- 3) Получить список текущих эксклюзивных блокировок
 SELECT *
